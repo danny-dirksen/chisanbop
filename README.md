@@ -1,7 +1,6 @@
-# Fresh project
+> ⚠️ This project is not yet functional. Stay tuned for updates!
 
-Your new Fresh project is ready to go. You can follow the Fresh "Getting
-Started" guide here: https://fresh.deno.dev/docs/getting-started
+# Chisanbop
 
 ### Usage
 
@@ -16,6 +15,6 @@ deno task dev
 
 This will watch the project directory and restart as necessary.
 
-## References
+## Additional References
 
 - https://blog.tensorflow.org/2021/11/3D-handpose.html

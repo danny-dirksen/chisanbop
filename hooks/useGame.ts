@@ -1,7 +1,7 @@
 import { useSignal } from "@preact/signals";
 import { DEFAULT_HAND_CALIBRATION } from "../models/Callibration.ts";
 import { useHands } from "./useHands.ts";
-import { useDetector } from "./useDetector.ts";
+import { useHandLandmarker } from "./useHandLandmarker.ts";
 
 export function useGame({
   videoRef,
@@ -10,19 +10,15 @@ export function useGame({
   videoRef: SignalRefObject<HTMLVideoElement | null>;
   canvasRef: SignalRefObject<HTMLCanvasElement | null>;
 }) {
-  const detector = useDetector({
-    modelType: "lite",
-  });
+  const handLandmarker = useHandLandmarker();
   const calibration = useSignal(DEFAULT_HAND_CALIBRATION);
   const { handPoses, handStates } = useHands({
-    detector,
+    handLandmarker: handLandmarker,
     calibration,
     videoRef,
   });
 
-  const dispatch = {
-
-  }
+  const dispatch = {};
 
   return {
     videoRef,
@@ -31,7 +27,7 @@ export function useGame({
     handStates,
     calibration,
     dispatch,
-  }
+  };
 }
 
 export type GameApi = ReturnType<typeof useGame>;

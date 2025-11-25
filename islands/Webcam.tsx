@@ -10,8 +10,12 @@ export const Webcam = ({ videoRef }: WebcamProps) => {
     // Ensure that el exists
     const el = videoRef.current;
     if (el === null) return;
-    if (!(el instanceof HTMLElement)) throw new Error("Not an HTMLElement!", { cause: el })
-    if (!(el instanceof HTMLVideoElement)) throw new Error("Not an HTMLVideoElement!", { cause: el })
+    if (!(el instanceof HTMLElement)) {
+      throw new Error("Not an HTMLElement!", { cause: el });
+    }
+    if (!(el instanceof HTMLVideoElement)) {
+      throw new Error("Not an HTMLVideoElement!", { cause: el });
+    }
 
     const startCamera = async () => {
       try {
@@ -37,7 +41,12 @@ export const Webcam = ({ videoRef }: WebcamProps) => {
 
   return (
     <div>
-      <video ref={videoRef} autoPlay playsInline className="w-screen h-screen" />
+      <video
+        ref={videoRef}
+        autoPlay
+        playsInline
+        className="w-screen h-screen"
+      />
     </div>
   );
 };

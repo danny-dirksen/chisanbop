@@ -1,13 +1,13 @@
-import { type HandDetector } from "@tensorflow-models/hand-pose-detection";
 import { useRef } from "preact/hooks";
 import { RefObject } from "preact";
 import { HandCallibration } from "../models/Callibration.ts";
 import { getHandStates, HandStates } from "../models/HandStates.ts";
 import { HandPoses } from "../models/HandPoses.ts";
 import { Signal, useSignal, useSignalEffect } from "@preact/signals";
+import { HandLandmarker } from "@mediapipe/tasks-vision";
 
 interface UseHandsProps {
-  detector: Signal<HandDetector | undefined>;
+  handLandmarker: Signal<HandLandmarker | Error | undefined>;
   videoRef: RefObject<HTMLVideoElement | null>;
   calibration: Signal<HandCallibration>;
 }
@@ -20,7 +20,7 @@ interface UseHandsOutput {
 }
 
 export function useHands(
-  { detector, videoRef, calibration }: UseHandsProps,
+  { handLandmarker, videoRef, calibration }: UseHandsProps,
 ): UseHandsOutput {
   const handPoses = useRef<HandPoses>(new HandPoses());
   const handStates = useSignal<HandStates>({
@@ -29,29 +29,26 @@ export function useHands(
   });
 
   useSignalEffect(() => {
-    let animationFrameId: number;
-    async function detectHands() {
-      if (detector.value !== undefined && videoRef.current !== null) {
-        const video = videoRef.current;
-        if (video.readyState === 4) {
-          const hands = await detector.value.estimateHands(video);
-          handPoses.current.update(hands);
-          const newHandStates = getHandStates(
-            handPoses.current,
-            calibration.value,
-            handStates.value,
-          );
-          if (newHandStates !== handStates.value) {
-            handStates.value = newHandStates;
-          }
-        }
+    const video = videoRef.current;
+    const landmarker = handLandmarker.value;
+    if (!video || !landmarker || landmarker instanceof Error) return;
+    let callbackNumber: number;
+    const everyframe = (timestamp: number) => {
+      const hands = landmarker.detectForVideo(video, timestamp);
+      handPoses.current.update(hands);
+      const newHandStates = getHandStates(
+        handPoses.current,
+        calibration.value,
+        handStates.value,
+      );
+      if (newHandStates !== handStates.value) {
+        handStates.value = newHandStates;
       }
-      animationFrameId = requestAnimationFrame(detectHands);
-    }
-    detectHands();
-    return () => {
-      cancelAnimationFrame(animationFrameId);
+      callbackNumber = video.requestVideoFrameCallback(everyframe);
     };
+    callbackNumber = video.requestVideoFrameCallback(everyframe);
+
+    return () => video.cancelVideoFrameCallback(callbackNumber);
   });
 
   return {

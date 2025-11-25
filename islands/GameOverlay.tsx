@@ -1,4 +1,9 @@
-import { Signal, useComputed, useSignal, useSignalEffect } from "@preact/signals";
+import {
+  Signal,
+  useComputed,
+  useSignal,
+  useSignalEffect,
+} from "@preact/signals";
 import { ActiveCanvas } from "./ActiveCanvas.tsx";
 import { GameApi } from "../hooks/useGame.ts";
 import { drawHands } from "../util/drawHands.ts";
@@ -8,7 +13,9 @@ interface GameOverlayProps {
   gameApi: GameApi;
 }
 
-export function GameOverlay({ gameApi: { videoRef, canvasRef, handPoses, handStates } }: GameOverlayProps) {
+export function GameOverlay(
+  { gameApi: { videoRef, canvasRef, handPoses, handStates } }: GameOverlayProps,
+) {
   const videoFrameSize = useMeasure(videoRef);
   const canvasSize = useComputed<Measure>(() => {
     // retrieve both `value`s either way. This ensures reactivity.
@@ -33,10 +40,10 @@ export function GameOverlay({ gameApi: { videoRef, canvasRef, handPoses, handSta
   const render = (ctx: CanvasRenderingContext2D) => {
     ctx.reset();
     ctx.strokeStyle = "#ff0000";
-    ctx.strokeRect(0, 0, width.peek() ?? 2, height.peek() ?? 2)
+    ctx.strokeRect(0, 0, width.peek() ?? 2, height.peek() ?? 2);
     if (handPoses?.current) drawHands(ctx, handPoses.current);
-  }
-  
+  };
+
   return (
     <>
       <div class="absolute left-0 top-0 w-full h-full flex items-center justify-center">
@@ -57,26 +64,39 @@ export interface Measure {
 }
 
 function fitInside(inner: Measure, outer: Measure): Measure {
-  const scale = Math.min(outer.width / inner.width, outer.height / inner.height);
+  const scale = Math.min(
+    outer.width / inner.width,
+    outer.height / inner.height,
+  );
   return {
     width: inner.width * scale,
     height: inner.height * scale,
   };
 }
 
-export function useMeasure(el: Signal<HTMLElement | null>): Signal<Measure | undefined> {
+export function useMeasure(
+  el: Signal<HTMLElement | null>,
+): Signal<Measure | undefined> {
   // Get an initial size
   const size = useSignal<Measure>();
   // const boundingClientRect = useComputed(() => el.value?.getBoundingClientRect());
-  
+
   useSignalEffect(() => {
     const boundingClientRect = el.value?.getBoundingClientRect();
     size.value = boundingClientRect;
     if (!el.value) return;
     const observer = new ResizeObserver((entries) => {
-      const entry = entries.find(e => e.target === el.value);
-      if (!entry) throw new TypeError("Why did this even get called?", { cause: entries });
-      if (entry.borderBoxSize.length !== 1) throw new Error("borderBoxSize.length !== 1>", { cause: entry.borderBoxSize });
+      const entry = entries.find((e) => e.target === el.value);
+      if (!entry) {
+        throw new TypeError("Why did this even get called?", {
+          cause: entries,
+        });
+      }
+      if (entry.borderBoxSize.length !== 1) {
+        throw new Error("borderBoxSize.length !== 1>", {
+          cause: entry.borderBoxSize,
+        });
+      }
       const observerSize = entry.borderBoxSize[0];
       size.value = {
         width: observerSize.inlineSize,

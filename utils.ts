@@ -1,4 +1,3 @@
-
 import { createDefine } from "fresh";
 
 // This specifies the type of "ctx.state" which is used to share

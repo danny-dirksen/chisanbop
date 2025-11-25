@@ -1,5 +1,5 @@
-import 'preact/debug';
-import 'preact/devtools';
+import "preact/debug";
+import "preact/devtools";
 import { Head } from "fresh/runtime";
 import { define } from "../utils.ts";
 import { Game } from "../islands/Game.tsx";

@@ -1,3 +1,6 @@
+import { HandPose } from "./HandPose.ts";
+import { HandState } from "./HandStates.ts";
+
 /** Calibration for pose-detection of a hand */
 export type HandCallibration = {
   [k in FingerType]: FingerCallibration;
@@ -11,11 +14,31 @@ export interface FingerCallibration {
   curledAngle: number;
 }
 
-type CallibrationDataset = [
+export type CallibrationDatasetEntry = [
   // [ thumb, indexFinger, middleFinger, ringFinger, pinkyFinger ]
   [number, number, number, number, number],
   [boolean, boolean, boolean, boolean, boolean],
-][];
+]
+
+export function createCalibrationDatasetEntry(handPose: HandPose, handState: HandState) {
+  const angles = [
+    handPose.fingerAngles.thumb,
+    handPose.fingerAngles.indexFinger,
+    handPose.fingerAngles.middleFinger,
+    handPose.fingerAngles.ringFinger,
+    handPose.fingerAngles.pinkyFinger,
+  ];
+  const extendednesses = [
+    handState.fingerStates.thumb,
+    handState.fingerStates.indexFinger,
+    handState.fingerStates.middleFinger,
+    handState.fingerStates.ringFinger,
+    handState.fingerStates.pinkyFinger,
+  ];
+  return [angles, extendednesses];
+}
+
+export type CallibrationDataset = CallibrationDatasetEntry[];
 
 type CalibrationDatasetFinger = [number, boolean][];
 
@@ -28,7 +51,7 @@ function getCalibrationDatasetFinger(
   ) => [angles[index], extensions[index]]);
 }
 
-function getFingerCalibration(
+function callibrateFinger(
   finger: CalibrationDatasetFinger,
 ): FingerCallibration {
   const curledAngles = finger.filter(([, straight]) => !straight).map((
@@ -54,15 +77,15 @@ function getFingerCalibration(
   };
 }
 
-export function getHandCallibration(
+export function callibrateHand(
   dataset: CallibrationDataset,
 ): HandCallibration {
   return {
-    thumb: getFingerCalibration(getCalibrationDatasetFinger(dataset, 0)),
-    indexFinger: getFingerCalibration(getCalibrationDatasetFinger(dataset, 1)),
-    middleFinger: getFingerCalibration(getCalibrationDatasetFinger(dataset, 2)),
-    ringFinger: getFingerCalibration(getCalibrationDatasetFinger(dataset, 3)),
-    pinkyFinger: getFingerCalibration(getCalibrationDatasetFinger(dataset, 4)),
+    thumb: callibrateFinger(getCalibrationDatasetFinger(dataset, 0)),
+    indexFinger: callibrateFinger(getCalibrationDatasetFinger(dataset, 1)),
+    middleFinger: callibrateFinger(getCalibrationDatasetFinger(dataset, 2)),
+    ringFinger: callibrateFinger(getCalibrationDatasetFinger(dataset, 3)),
+    pinkyFinger: callibrateFinger(getCalibrationDatasetFinger(dataset, 4)),
   };
 }
 
@@ -149,6 +172,6 @@ const DEFAULT_CALLIBRATION_DATASET: CallibrationDataset = [
   ],
 ];
 
-export const DEFAULT_HAND_CALIBRATION: HandCallibration = getHandCallibration(
+export const DEFAULT_HAND_CALIBRATION: HandCallibration = callibrateHand(
   DEFAULT_CALLIBRATION_DATASET,
 );

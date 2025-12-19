@@ -14,6 +14,7 @@
     "@mediapipe/tasks-vision": "npm:@mediapipe/tasks-vision@^0.10.22-rc.20250304",
     "@rollup/plugin-commonjs": "npm:@rollup/plugin-commonjs@^28.0.6",
     "@std/assert": "jsr:@std/assert@^1.0.15",
+    "@std/expect": "jsr:@std/expect@^1.0.17",
     "@types/three": "npm:@types/three@^0.180.0",
     "fresh": "jsr:@fresh/core@^2.2.0",
     "preact": "npm:preact@^10.27.2",

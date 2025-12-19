@@ -10,7 +10,7 @@ export class HandPose {
     [k in FingerType]: number;
   };
 
-  constructor(public hand: Landmark[], public handedness: "Left" | "Right") {
+  constructor(public hand: Landmark[], public handedness: Handedness) {
     this.boundingBox = {
       start: new Vector2(),
       size: new Vector2(),
@@ -64,14 +64,6 @@ export class HandPose {
       hand,
       FINGER_SEQUENCES.pinkyFinger,
     );
-
-    // console.log(
-    //   this.fingerAngles.thumb.toFixed(2),
-    //   this.fingerAngles.indexFinger.toFixed(2),
-    //   this.fingerAngles.middleFinger.toFixed(2),
-    //   this.fingerAngles.ringFinger.toFixed(2),
-    //   this.fingerAngles.pinkyFinger.toFixed(2),
-    // );
   }
 }
 
@@ -85,6 +77,7 @@ const helpers = {
   segment0: new Vector3(),
   segment1: new Vector3(),
   segment2: new Vector3(),
+  segment3: new Vector3(),
   boundingBoxMin: new Vector3(),
   boundingBoxMax: new Vector3(),
 };
@@ -92,20 +85,23 @@ const helpers = {
 /** Get the total amount of curl for a finger, measured in radians */
 function getCurl(
   keypoints: Vector3Like[],
-  fingerIndices: [number, number, number, number],
+  fingerIndices: [number, number, number, number, number],
 ): number {
   const kp0 = keypoints[fingerIndices[0]];
   const kp1 = keypoints[fingerIndices[1]];
   const kp2 = keypoints[fingerIndices[2]];
   const kp3 = keypoints[fingerIndices[3]];
+  const kp4 = keypoints[fingerIndices[4]];
 
-  const { segment0, segment1, segment2 } = helpers;
+  const { segment0, segment1, segment2, segment3 } = helpers;
   segment0.subVectors(kp1, kp0);
   segment1.subVectors(kp2, kp1);
   segment2.subVectors(kp3, kp2);
+  segment3.subVectors(kp4, kp3);
 
   const angle0 = segment0.angleTo(segment1);
   const angle1 = segment1.angleTo(segment2);
-  return angle0 + angle1;
+  const angle2 = segment2.angleTo(segment3);
+  return angle0 + angle1 + angle2;
 }
 

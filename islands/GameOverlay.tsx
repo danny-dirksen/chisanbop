@@ -7,7 +7,7 @@ import {
 import { ActiveCanvas } from "./ActiveCanvas.tsx";
 import { GameApi } from "../hooks/useGame.ts";
 import { drawHands } from "../util/drawHands.ts";
-import { useCallback } from "preact/hooks";
+import { Callibrator } from "./Callibrator.tsx";
 
 interface GameOverlayProps {
   gameApi: GameApi;
@@ -53,6 +53,9 @@ export function GameOverlay(
           height={height}
           render={render}
         />
+      </div>
+      <div class="absolute left-0 top-0 w-full h-full flex items-center justify-center">
+        <Callibrator handPoses={handPoses} />
       </div>
     </>
   );

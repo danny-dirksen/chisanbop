@@ -25,33 +25,38 @@ export const KP_INDICES = {
 
 // Sequences of keypoint indices for each finger.
 export const FINGER_SEQUENCES: {
-  [k in FingerType]: [number, number, number, number];
+  [k in FingerType]: [number, number, number, number, number];
 } = {
   thumb: [
+    KP_INDICES.wrist,
     KP_INDICES.thumb_cmc,
     KP_INDICES.thumb_mcp,
     KP_INDICES.thumb_ip,
     KP_INDICES.thumb_tip,
   ],
   indexFinger: [
+    KP_INDICES.wrist,
     KP_INDICES.index_finger_mcp,
     KP_INDICES.index_finger_pip,
     KP_INDICES.index_finger_dip,
     KP_INDICES.index_finger_tip,
   ],
   middleFinger: [
+    KP_INDICES.wrist,
     KP_INDICES.middle_finger_mcp,
     KP_INDICES.middle_finger_pip,
     KP_INDICES.middle_finger_dip,
     KP_INDICES.middle_finger_tip,
   ],
   ringFinger: [
+    KP_INDICES.wrist,
     KP_INDICES.ring_finger_mcp,
     KP_INDICES.ring_finger_pip,
     KP_INDICES.ring_finger_dip,
     KP_INDICES.ring_finger_tip,
   ],
   pinkyFinger: [
+    KP_INDICES.wrist,
     KP_INDICES.pinky_finger_mcp,
     KP_INDICES.pinky_finger_pip,
     KP_INDICES.pinky_finger_dip,

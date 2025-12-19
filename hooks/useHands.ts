@@ -1,10 +1,10 @@
-import { useRef } from "preact/hooks";
 import { RefObject } from "preact";
 import { HandCallibration } from "../models/Callibration.ts";
 import { getHandStates, HandStates } from "../models/HandStates.ts";
 import { HandPoses } from "../models/HandPoses.ts";
 import { Signal, useSignal, useSignalEffect } from "@preact/signals";
-import { HandLandmarker } from "@mediapipe/tasks-vision";
+import { HandLandmarker, HandLandmarkerResult } from "@mediapipe/tasks-vision";
+import { useSignalRef } from "@preact/signals/utils";
 
 interface UseHandsProps {
   handLandmarker: Signal<HandLandmarker | Error | undefined>;
@@ -14,15 +14,15 @@ interface UseHandsProps {
 
 interface UseHandsOutput {
   /** Mutable, non-reactive(Caution!) */
-  readonly handPoses?: RefObject<HandPoses>;
+  readonly handPoses: SignalRefObject<HandPoses>;
   /** Immutable, reactive */
-  readonly handStates?: Signal<HandStates>;
+  readonly handStates: Signal<HandStates>;
 }
 
 export function useHands(
   { handLandmarker, videoRef, calibration }: UseHandsProps,
 ): UseHandsOutput {
-  const handPoses = useRef<HandPoses>(new HandPoses());
+  const handPoses = useSignalRef<HandPoses>(new HandPoses());
   const handStates = useSignal<HandStates>({
     right: null,
     left: null,
@@ -34,10 +34,11 @@ export function useHands(
     if (!video || !landmarker || landmarker instanceof Error) return;
     let callbackNumber: number;
     const everyframe = (timestamp: number) => {
-      const hands = landmarker.detectForVideo(video, timestamp);
-      handPoses.current.update(hands);
+      const hands = landmarker.detectForVideo(video, timestamp, { rotationDegrees: 180 });
+      // in-place operation. Assignment is used to update signal.
+      handPoses.value.update(hands, true);
       const newHandStates = getHandStates(
-        handPoses.current,
+        handPoses.value,
         calibration.value,
         handStates.value,
       );

@@ -9,6 +9,8 @@ declare global {
     | "ringFinger"
     | "pinkyFinger";
 
+  type Handedness = "right" | "left";
+  
   interface SignalRefObject<T> extends Signal<T> {
     current: T;
   }

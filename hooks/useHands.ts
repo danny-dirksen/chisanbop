@@ -3,7 +3,7 @@ import { HandCallibration } from "../models/Callibration.ts";
 import { getHandStates, HandStates } from "../models/HandStates.ts";
 import { HandPoses } from "../models/HandPoses.ts";
 import { Signal, useSignal, useSignalEffect } from "@preact/signals";
-import { HandLandmarker, HandLandmarkerResult } from "@mediapipe/tasks-vision";
+import { HandLandmarker } from "@mediapipe/tasks-vision";
 import { useSignalRef } from "@preact/signals/utils";
 
 interface UseHandsProps {

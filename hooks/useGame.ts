@@ -13,7 +13,7 @@ export function useGame({
   const handLandmarker = useHandLandmarker();
   const calibration = useSignal(DEFAULT_HAND_CALIBRATION);
   const { handPoses, handStates } = useHands({
-    handLandmarker: handLandmarker,
+    handLandmarker,
     calibration,
     videoRef,
   });

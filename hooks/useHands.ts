@@ -34,7 +34,7 @@ export function useHands(
     if (!video || !landmarker || landmarker instanceof Error) return;
     let callbackNumber: number;
     const everyframe = (timestamp: number) => {
-      const hands = landmarker.detectForVideo(video, timestamp, { rotationDegrees: 180 });
+      const hands = landmarker.detectForVideo(video, timestamp);
       // in-place operation. Assignment is used to update signal.
       handPoses.value.update(hands, true);
       const newHandStates = getHandStates(

@@ -14,16 +14,13 @@ interface GameOverlayProps {
 }
 
 export function GameOverlay(
-  { gameApi: { videoRef, canvasRef, handPoses, handStates } }: GameOverlayProps,
+  { gameApi: { videoRef, canvasRef, handPoses } }: GameOverlayProps,
 ) {
   const videoFrameSize = useMeasure(videoRef);
+  const videoInnerSize = useContentSize(videoRef);
   const canvasSize = useComputed<Measure>(() => {
-    // retrieve both `value`s either way. This ensures reactivity.
-    const innerSize = videoRef.value && {
-      width: videoRef.value.videoWidth,
-      height: videoRef.value.videoHeight,
-    };
     const frameSize = videoFrameSize.value;
+    const innerSize = videoInnerSize.value;
     if (!frameSize || frameSize.width === 0 || frameSize.height === 0) {
       return { width: 0, height: 0 };
     }
@@ -108,6 +105,34 @@ export function useMeasure(
     });
     observer.observe(el.value);
     return () => observer.disconnect();
+  });
+
+  return size;
+}
+
+function useContentSize(videoRef: Signal<HTMLVideoElement | null>) {
+  const size = useSignal<Measure | undefined>();
+
+  useSignalEffect(() => {
+    if (!videoRef.value) {
+      size.value = undefined;
+      return;
+    }
+
+    const video = videoRef.value;
+    const updateSize = () => {
+      if (video.videoWidth && video.videoHeight) {
+        size.value = {
+          width: video.videoWidth,
+          height: video.videoHeight,
+        };
+      }
+    };
+
+    video.addEventListener("loadedmetadata", updateSize);
+    updateSize();
+
+    return () => video.removeEventListener("loadedmetadata", updateSize);
   });
 
   return size;

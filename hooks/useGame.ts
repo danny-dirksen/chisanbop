@@ -6,9 +6,11 @@ import { useHandLandmarker } from "./useHandLandmarker.ts";
 export function useGame({
   videoRef,
   canvasRef,
+  flipped,
 }: {
   videoRef: SignalRefObject<HTMLVideoElement | null>;
   canvasRef: SignalRefObject<HTMLCanvasElement | null>;
+  flipped?: boolean;
 }) {
   const handLandmarker = useHandLandmarker();
   const calibration = useSignal(DEFAULT_HAND_CALIBRATION);
@@ -16,6 +18,7 @@ export function useGame({
     handLandmarker,
     calibration,
     videoRef,
+    flipped,
   });
 
   const dispatch = {};

@@ -2,9 +2,10 @@ import { useSignalEffect } from "@preact/signals";
 
 interface WebcamProps {
   videoRef: SignalRefObject<HTMLVideoElement | null>;
+  flipped?: boolean;
 }
 
-export const Webcam = ({ videoRef }: WebcamProps) => {
+export const Webcam = ({ videoRef, flipped }: WebcamProps) => {
   if (videoRef === undefined) throw new Error("ref is undefined!");
   useSignalEffect(() => {
     // Ensure that el exists
@@ -46,6 +47,9 @@ export const Webcam = ({ videoRef }: WebcamProps) => {
         autoPlay
         playsInline
         className="w-screen h-screen"
+        style={{
+          transform: flipped ? "scaleX(-1)" : undefined,
+        }}
       />
     </div>
   );

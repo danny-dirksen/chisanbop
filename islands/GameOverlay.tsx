@@ -8,13 +8,14 @@ import { ActiveCanvas } from "./ActiveCanvas.tsx";
 import { GameApi } from "../hooks/useGame.ts";
 import { drawHands } from "../util/drawHands.ts";
 import { Callibrator } from "./Callibrator.tsx";
+import { HandStateDisplay } from "./HandStateDisplay.tsx";
 
 interface GameOverlayProps {
   gameApi: GameApi;
 }
 
 export function GameOverlay(
-  { gameApi: { videoRef, canvasRef, handPoses } }: GameOverlayProps,
+  { gameApi: { videoRef, canvasRef, handPoses, handStates } }: GameOverlayProps,
 ) {
   const videoFrameSize = useMeasure(videoRef);
   const videoInnerSize = useContentSize(videoRef);
@@ -53,6 +54,9 @@ export function GameOverlay(
       </div>
       <div class="absolute left-0 top-0 w-full h-full flex items-center justify-center">
         <Callibrator handPoses={handPoses} />
+      </div>
+      <div class="absolute right-0 bottom-0 w-fit h-fit m-8">
+        <HandStateDisplay handStates={handStates} />
       </div>
     </>
   );

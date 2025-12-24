@@ -1,4 +1,4 @@
-import { Signal, useSignal } from "@preact/signals";
+import { Signal, useComputed, useSignal, useSignalEffect } from "@preact/signals";
 import { HandPose } from "../models/HandPose.ts";
 import { CallibrationDataset, CallibrationDatasetEntry } from "../models/Callibration.ts";
 import { CountingMethod } from "../util/countingMethods/CountingMethod.ts";
@@ -11,12 +11,14 @@ export function useCallibrator({
   countingMethod,
 }: UseCallibratorParams) {
   const callibrationDataset = useSignal<CallibrationDataset>([]);
+  const digit = useSignal(0);
+  const digitHandState = useComputed(() => {
+    return countingMethod.value.valueToHandStates(digit.value)?.right ?? null;
+  });
+  useSignalEffect(() => console.log(digit.value, digitHandState.value));
 
-  function addEntry(handPose: HandPose, digit: number) {
-    const handStates = countingMethod.peek().valueToHandStates(digit);
-    if (!handStates) return;
-    const handState = handStates[handPose.handedness];
-    if (!handState) return;
+  function addEntry(handPose: HandPose) {
+    if (digitHandState.value === null) return;
 
     const newEntry: CallibrationDatasetEntry = [
       [
@@ -27,11 +29,11 @@ export function useCallibrator({
         handPose.fingerAngles.pinkyFinger,
       ],
       [
-        handState.fingerStates.thumb,
-        handState.fingerStates.indexFinger,
-        handState.fingerStates.middleFinger,
-        handState.fingerStates.ringFinger,
-        handState.fingerStates.pinkyFinger,
+        digitHandState.value.fingerStates.thumb,
+        digitHandState.value.fingerStates.indexFinger,
+        digitHandState.value.fingerStates.middleFinger,
+        digitHandState.value.fingerStates.ringFinger,
+        digitHandState.value.fingerStates.pinkyFinger,
       ],
     ];
     callibrationDataset.value = [
@@ -41,6 +43,8 @@ export function useCallibrator({
     (globalThis as {[k in string]: unknown}).callibrationDataset = callibrationDataset.value;
   }
   return {
+    digit,
+    digitHandState,
     callibrationDataset,
     addEntry,
   }

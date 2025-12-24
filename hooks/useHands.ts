@@ -10,6 +10,7 @@ interface UseHandsProps {
   handLandmarker: Signal<HandLandmarker | Error | undefined>;
   videoRef: RefObject<HTMLVideoElement | null>;
   calibration: Signal<HandCallibration>;
+  flipped?: boolean;
 }
 
 interface UseHandsOutput {
@@ -19,9 +20,12 @@ interface UseHandsOutput {
   readonly handStates: Signal<HandStates>;
 }
 
-export function useHands(
-  { handLandmarker, videoRef, calibration }: UseHandsProps,
-): UseHandsOutput {
+export function useHands({
+  handLandmarker,
+  videoRef,
+  calibration,
+  flipped,
+}: UseHandsProps): UseHandsOutput {
   const handPoses = useSignalRef<HandPoses>(new HandPoses());
   const handStates = useSignal<HandStates>({
     right: null,
@@ -36,7 +40,7 @@ export function useHands(
     const everyframe = (timestamp: number) => {
       const hands = landmarker.detectForVideo(video, timestamp);
       // in-place operation. Assignment is used to update signal.
-      handPoses.value.update(hands, true);
+      handPoses.value.update(hands, flipped ?? false);
       const newHandStates = getHandStates(
         handPoses.value,
         calibration.value,

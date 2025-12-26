@@ -52,7 +52,7 @@ export function GameOverlay(
           render={render}
         />
       </div>
-      <div class="absolute left-0 top-0 w-full h-full flex items-center justify-center">
+      <div style={{ display: "none" }} class="flex absolute left-0 top-0 w-full h-full items-center justify-center">
         <Callibrator handPoses={handPoses} />
       </div>
       <div class="absolute right-0 bottom-0 w-fit h-fit m-8">

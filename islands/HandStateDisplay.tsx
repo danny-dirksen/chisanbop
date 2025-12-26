@@ -9,16 +9,16 @@ export function HandStateDisplay(
   { handStates }: HandStateDisplayProps,
 ) {
   return (
-    <div class="flex flex-row gap-4 w-fit h-fit text-white">
-      <div class="flex flex-col items-center">
-        <div class="font-bold mb-2">L</div>
+    <div class="flex flex-row gap-4 w-fit h-fit text-white bg-black/50 p-4 rounded-2xl">
+      <div class="flex flex-col items-start">
+        {/* <div class="font-bold">L</div> */}
         <HandStateDisplayHand
           handState={handStates.value.left}
           handedness="left"
         />
       </div>
-      <div class="flex flex-col items-center">
-        <div class="font-bold mb-2">R</div>
+      <div class="flex flex-col items-end">
+        {/* <div class="font-bold">R</div> */}
         <HandStateDisplayHand
           handState={handStates.value.right}
           handedness="right"
@@ -45,7 +45,7 @@ function HandStateDisplayHand(
     ["pinkyFinger", handState?.fingerStates.pinkyFinger ?? false],
   ]
   return (
-    <div class={`flex ${flexDirection} w-20 h-30 items-stretch gap-1`}>
+    <div class={`flex ${flexDirection} w-20 h-20 items-stretch gap-1`}>
       {fingerStates.map(([fingerType, isExtended]) => (
         <div key={fingerType} class="flex-1 flex flex-col justify-end items-center gap-px">
           {/* Height depends on finger type, either outlined or filled based on extended state */}
@@ -53,31 +53,24 @@ function HandStateDisplayHand(
             <div
               class={`relative rounded-full ${isExtended ? "bg-white" : "border border-white"} `}
               style={{
-                height: `${fingerLengths[fingerType]}%`,
+                height: `${fingerProperties[fingerType].length}%`,
+                bottom: `${fingerProperties[fingerType].elevation}%`,
               }}
             />
           </div>
-          <div class="text-center text-sm overflow-visible">
-            {fingerLabels[fingerType]}
-          </div>
+          {/* <div class="text-center text-sm overflow-visible">
+            {fingerProperties[fingerType].label}
+          </div> */}
         </div>
       ))}
     </div>
   );
 }
 
-const fingerLabels: { [k in FingerType]: string } = {
-  thumb: "T",
-  indexFinger: "I",
-  middleFinger: "M",
-  ringFinger: "R",
-  pinkyFinger: "P",
-};
-
-const fingerLengths: { [k in FingerType]: number } = {
-  thumb: 50,
-  indexFinger: 90,
-  middleFinger: 100,
-  ringFinger: 90,
-  pinkyFinger: 80,
+const fingerProperties: { [k in FingerType]: { label: string; length: number; elevation: number } } = {
+  thumb: { label: "T", length: 40, elevation: 0 },
+  indexFinger: { label: "I", length: 60, elevation: 35 },
+  middleFinger: { label: "M", length: 70, elevation: 30 },
+  ringFinger: { label: "R", length: 70, elevation: 25 },
+  pinkyFinger: { label: "P", length: 65, elevation: 20 },
 };

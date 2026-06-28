@@ -2,7 +2,7 @@ import { useCallibrator } from "../hooks/useCallibrator.ts";
 import { useEveryFrame } from "../hooks/useEveryframe.ts";
 import { HandPose } from "../models/HandPose.ts";
 import { HandPoses } from "../models/HandPoses.ts";
-import { CHISANBOP_COUNTING_METHOD } from "../util/countingMethods/CountingMethod.ts";
+import { CHISANBOP_COUNTING_METHOD } from "../util/countingMethods/CHISANBOP_COUNTING_METHOD.ts";
 import { Signal, useComputed, useSignal } from "@preact/signals";
 
 export function Callibrator({

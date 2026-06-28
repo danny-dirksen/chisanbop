@@ -13,7 +13,7 @@ export function useCallibrator({
   const callibrationDataset = useSignal<CallibrationDataset>([]);
   const digit = useSignal(0);
   const digitHandState = useComputed(() => {
-    return countingMethod.value.valueToHandStates(digit.value)?.right ?? null;
+    return countingMethod.value.canonicalForm(digit.value)?.right ?? null;
   });
   useSignalEffect(() => console.log(digit.value, digitHandState.value));
 

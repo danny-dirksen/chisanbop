@@ -1,5 +1,5 @@
 import { expect } from "@std/expect";
-import { CHISANBOP_COUNTING_METHOD } from "./CountingMethod.ts";
+import { CHISANBOP_COUNTING_METHOD } from "./CHISANBOP_COUNTING_METHOD.ts";
 import { HandStates } from "../../models/HandStates.ts";
 import "../../models/index.d.ts";
 

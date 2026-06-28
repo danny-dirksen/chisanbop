@@ -8,7 +8,7 @@ import { ActiveCanvas } from "./ActiveCanvas.tsx";
 import { GameApi } from "../hooks/useGame.ts";
 import { drawHands } from "../util/drawHands.ts";
 import { Callibrator } from "./Callibrator.tsx";
-import { HandStateDisplay } from "./HandStateDisplay.tsx";
+import { HandStateThumbnail } from "./HandStateThumbnail.tsx";
 
 interface GameOverlayProps {
   gameApi: GameApi;
@@ -56,7 +56,7 @@ export function GameOverlay(
         <Callibrator handPoses={handPoses} />
       </div>
       <div class="absolute right-0 bottom-0 w-fit h-fit m-8">
-        <HandStateDisplay handStates={handStates} />
+        <HandStateThumbnail handStates={handStates} />
       </div>
     </>
   );

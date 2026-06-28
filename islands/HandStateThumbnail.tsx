@@ -1,25 +1,25 @@
 import { Signal } from "@preact/signals";
 import { HandState, HandStates } from "../models/HandStates.ts";
 
-interface HandStateDisplayProps {
+interface HandStateThumbnailProps {
   handStates: Signal<HandStates>;
 }
 
-export function HandStateDisplay(
-  { handStates }: HandStateDisplayProps,
+export function HandStateThumbnail(
+  { handStates }: HandStateThumbnailProps,
 ) {
   return (
     <div class="flex flex-row gap-4 w-fit h-fit text-white bg-black/50 p-4 rounded-2xl">
       <div class="flex flex-col items-start">
         {/* <div class="font-bold">L</div> */}
-        <HandStateDisplayHand
+        <HandStateThumbnailHand
           handState={handStates.value.left}
           handedness="left"
         />
       </div>
       <div class="flex flex-col items-end">
         {/* <div class="font-bold">R</div> */}
-        <HandStateDisplayHand
+        <HandStateThumbnailHand
           handState={handStates.value.right}
           handedness="right"
         />
@@ -28,13 +28,13 @@ export function HandStateDisplay(
   );
 }
 
-interface HandStateDisplayHandProps {
+interface HandStateThumbnailHandProps {
   handState: HandState | null;
   handedness: Handedness;
 }
 
-function HandStateDisplayHand(
-  { handState, handedness }: HandStateDisplayHandProps,
+function HandStateThumbnailHand(
+  { handState, handedness }: HandStateThumbnailHandProps,
 ) {
   const flexDirection = handedness === "right" ? "flex-row" : "flex-row-reverse";
   const fingerStates: [FingerType, boolean][] = [
